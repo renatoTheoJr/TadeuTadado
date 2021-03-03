@@ -1,0 +1,107 @@
+drop table if exists aluno cascade;
+drop sequence if exists id_aluno_seq;
+drop table if exists materia cascade;
+drop sequence if exists id_materia_seq;
+drop table if exists professor;
+drop sequence if exists id_professor_seq;
+drop table if exists perguntas;
+drop sequence if exists id_perguntas_seq;
+drop table  if exists respostas;
+drop sequence if exists id_respostas_seq;
+CREATE sequence id_aluno_seq
+    INCREMENT 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+    CACHE 1;
+drop table if exists aluno;
+create table aluno
+(
+	id_aluno bigint  default nextval('id_aluno_seq') not null,
+	nome  CHARACTER VARYING(40) NOT NULL,
+	sobrenome  CHARACTER VARYING(40) NOT NULL,
+	ra bigint unique not null,
+	sexo char not null,
+	celular  CHARACTER VARYING(14) NOT NULL,
+	login  CHARACTER VARYING(40) unique NOT NULL,
+	senha  CHARACTER VARYING(32) NOT NULL,
+	excluido char not null,
+	constraint id_aluno_pk primary key(id_aluno)
+);
+drop table if exists materia;
+CREATE sequence id_materia_seq
+    INCREMENT 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+    CACHE 1;
+create table materia
+(
+	id_materia bigint default nextval('id_materia_seq') not null,
+	nome CHARACTER VARYING(40) not null,
+	excluido char not null,
+	constraint id_materia_pk primary key(id_materia)
+);
+drop table if exists professor;
+CREATE sequence id_professor_seq
+    INCREMENT 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+    CACHE 1;
+create table professor
+(
+	id_professor bigint default nextval('id_professor_seq') not null,
+
+	nome       CHARACTER VARYING(60) NOT NULL,
+	    sobrenome       CHARACTER VARYING(60) NOT NULL,
+    cpf             character varying(11) UNIQUE NOT NULL,
+    sexo            CHAR NOT NULL,
+    celular    CHARACTER VARYING(14)     NOT NULL,
+	id_materia bigint not null,
+	login  CHARACTER VARYING(40) unique NOT NULL,
+	senha  CHARACTER VARYING(32) not null,
+excluido char not null,
+	constraint id_professor_pk primary key(id_professor),
+	constraint id_materia_fk foreign key(id_materia) references materia(id_materia)
+);
+
+drop table if exists perguntas;
+CREATE sequence id_perguntas_seq
+    INCREMENT 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+    CACHE 1;
+create table perguntas
+(
+	id_perguntas bigint default nextval('id_perguntas_seq') not null,
+	id_materia bigint not null,
+	caminhoImg  character varying(100) not null,
+	resposta  char not null,
+excluido char not null,
+	constraint id_perguntas_pk primary key(id_perguntas),
+	constraint id_materia_fk foreign key(id_materia) references materia(id_materia)
+);
+
+CREATE sequence id_respostas_seq
+    INCREMENT 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+    CACHE 1;
+create table respostas
+(
+	id_respostas bigint default nextval('id_respostas_seq') not null,
+	id_materia bigint not null,
+	id_aluno bigint not null,
+	acertos int not null,
+	erros int not null,
+constraint id_respostas_pk primary key(id_respostas),
+	constraint id_materia_fk foreign key(id_materia) references materia(id_materia),
+constraint id_aluno_fk foreign key(id_aluno) references aluno(id_aluno)
+);
+INSERT INTO aluno (nome, sobrenome, ra, sexo,celular, login, senha, excluido)
+VALUES ('Miguel', 'UU', 17057031 ,'m', 14985235566, 'miguel', '123','n');
+insert into materia (nome, excluido) values ('Português','n');
+insert into materia (nome, excluido) values ('Matemática','n');
